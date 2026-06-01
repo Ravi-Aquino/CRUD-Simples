@@ -1,21 +1,27 @@
 package Entities;
 
 public class User {
+    private int id;
     private String usuario;
     private int idade;
     private String senha;
+    private static int proximoId = 1;
 //--------------------------------------------------------------
-    public User(String usuario, int idade, String senha) {
-        this.usuario = usuario;
-        this.idade = idade;
-        this.senha = senha;
-    }
-//
     public User() {
+        this.id = proximoId;
+        proximoId++;
     }
     //--------------------------------------------------------------
 
-    public String getusuario() {
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public int getId(){
+        return id;
+    }
+
+    public String getUsuario() {
         return usuario;
     }
 
@@ -44,10 +50,12 @@ public class User {
     }
     //--------------------------------------------------------------
 
+
     @Override
     public String toString() {
         return "User{" +
-                "usuario='" + usuario + '\'' +
+                "id=" + id +
+                ", usuario='" + usuario + '\'' +
                 ", idade=" + idade +
                 ", senha='" + senha + '\'' +
                 '}';

@@ -2,19 +2,22 @@ package Services;
 
 import Entities.User;
 //
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserService {
     static Scanner sc = new Scanner(System.in);
     //-------------------------------------------------------------
-    public static void verificarArquivo(){
+    static ArrayList<User> usuariosList = new ArrayList<User>();
+    //----------------------METHODS---------------------------------------
+    public static void visualizar(){
+
     }
     //-------------------------------------------------------------
     public static void cadastro(){
-
         System.out.println("---------Cadastro---------");
         User usuario = new User();
+
 
         letraPorLetra("Digite seu nome de usuário: ");
         usuario.setUsuario(sc.nextLine().trim());
@@ -46,6 +49,7 @@ public class UserService {
         String senha;
 
         //LOOP QUE VERIFICA A SENHA
+
         do{
             letraPorLetra("Digite sua senha [6 digitos]: ");
             senha = sc.nextLine();
@@ -63,6 +67,13 @@ public class UserService {
         }catch (InterruptedException e){
             e.printStackTrace();
         }
+        //Adiciona o usuario à lista
+        try{
+            usuariosList.add(usuario);
+        } catch (RuntimeException e) {
+            System.out.println("\u001B[31mNão foi possível cadastrar o usuário. Tente novamente mais tarde!\u001B[0m");
+        }
+
     }
     //-------------------------------------------------------------
     public static void menu() throws InterruptedException {
@@ -81,7 +92,7 @@ public class UserService {
 
                     opcao = Integer.parseInt(entrada);
 
-                    if(opcao == 1 || opcao == 2){
+                    if(opcao == 1 || opcao == 2 || opcao == 3){
                         break;
                     } else{
                         letraPorLetra("\u001B[31m[ERRO] Você digitou uma opção inválida!\u001B[0m \n");
@@ -102,13 +113,17 @@ public class UserService {
                 case 1: cadastro();
                     break;
                 case 2:
+                    visualizar();
+                    break;
+                case 3:
                     ficar = false;
                     System.out.println("Finalizando programa...");
                     break;
             }
+
         }
     }
-    //----------------------METHODS---------------------------------------
+    //-------------------------------------------------------------------
     public static void letraPorLetra(String mensagem){
         for (char caractere : mensagem.toCharArray()) {
             System.out.print(caractere);
