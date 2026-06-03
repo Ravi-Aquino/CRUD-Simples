@@ -8,70 +8,93 @@ import java.util.Scanner;
 public class UserService {
     static Scanner sc = new Scanner(System.in);
     //-------------------------------------------------------------
-    static ArrayList<User> usuariosList = new ArrayList<User>();
+    static ArrayList<User> usuariosList = new ArrayList<>();
     //----------------------METHODS---------------------------------------
-    public static void visualizar(){
+    public static void visualizar() {
+        System.out.println("\u001B[34m--------------------\u001B[0m Usuários \u001B[34m--------------------\u001B[0m");
+        System.out.printf("%-10s %-20s %-10s %-12s%n","ID", "NOME", "IDADE", "SENHA");
+        System.out.println("--------------------------------------------------");
 
+        for (User user : usuariosList) {
+            System.out.printf("%-10s %-20s %-10s %-12s%n",
+                    user.getId(),
+                    user.getUsuario(),
+                    user.getIdade(),
+                    user.getSenha()
+            );
+        }
+        System.out.println("\u001B[34m--------------------------------------------------\u001B[0m");
     }
+
     //-------------------------------------------------------------
     public static void cadastro(){
-        System.out.println("---------Cadastro---------");
-        User usuario = new User();
 
+        boolean terminar = false;
+        while(!terminar){
+            System.out.println("---------Cadastro---------");
+            User usuario = new User();
 
-        letraPorLetra("Digite seu nome de usuário: ");
-        usuario.setUsuario(sc.nextLine().trim());
+            letraPorLetra("Digite seu nome de usuário: ");
+            usuario.setUsuario(sc.nextLine().trim());
 
-        int idade = 0;
-        boolean idadeValida = false;
+            int idade = 0;
+            boolean idadeValida = false;
 
-        //LOOP QUE VERIFICA IDADE
-        do{
-            letraPorLetra("Digite sua idade: ");
-            String entrada = sc.nextLine();
-            try{
-                idade = Integer.parseInt(entrada);
-                if(idade < 0){
-                    letraPorLetra("\u001B[31m[ERRO] Digite a idade corretamente\u001B[0m \n");
-                } else{
-                    idadeValida = true;
+            //LOOP QUE VERIFICA IDADE
+            do{
+                letraPorLetra("Digite sua idade: ");
+                String entrada = sc.nextLine();
+                try{
+                    idade = Integer.parseInt(entrada);
+                    if(idade < 0){
+                        letraPorLetra("\u001B[31m[ERRO] Digite a idade corretamente\u001B[0m \n");
+                    } else{
+                        idadeValida = true;
+
+                    }
+
+                } catch (NumberFormatException e) {
+                    letraPorLetra("\u001B[31m[ERRO] Erro ao definir idade!\u001B[0m \n");
 
                 }
 
-            } catch (NumberFormatException e) {
-                letraPorLetra("\u001B[31m[ERRO] Erro ao definir idade!\u001B[0m \n");
+            }while(!idadeValida);
+            usuario.setIdade(idade);
 
+            String senha;
+
+            //LOOP QUE VERIFICA A SENHA
+
+            do{
+                letraPorLetra("Digite sua senha [6 digitos]: ");
+                senha = sc.nextLine();
+                if(senha.length() < 6){
+                    letraPorLetra("\u001B[31m[ERRO]Sua senha deve conter ao menos 6 digitos, tente novamente.\u001B[0m \n");
+                }
+            }while(senha.length() < 6);
+            usuario.setSenha(senha);
+
+            System.out.println("---------------------------");
+            cronometro(100);
+            //Adiciona o usuario à lista
+            try{
+                usuariosList.add(usuario);
+            } catch (RuntimeException e) {
+                System.out.println("\u001B[31mNão foi possível cadastrar o usuário. Tente novamente mais tarde!\u001B[0m");
             }
 
-        }while(!idadeValida);
-        usuario.setIdade(idade);
+            System.out.print("Deseja continuar? [S/N] ");
+            String escolhaCadastro = String.valueOf(sc.nextLine().charAt(0)).trim().toUpperCase();
 
-        String senha;
 
-        //LOOP QUE VERIFICA A SENHA
-
-        do{
-            letraPorLetra("Digite sua senha [6 digitos]: ");
-            senha = sc.nextLine();
-            if(senha.length() < 6){
-                letraPorLetra("\u001B[31m[ERRO]Senha inválida, tente novamente.\u001B[0m");
-            } else{
-                letraPorLetra("[VOLTANDO AO MENU]");
+            while(!escolhaCadastro.equals("S") && !escolhaCadastro.equals("N")){
+                System.out.print("\u001B[31mDigite uma opção válida!\u001B[0m ");
+                escolhaCadastro = String.valueOf(sc.nextLine().charAt(0)).trim().toUpperCase();
             }
-        }while(senha.length() < 6);
-        usuario.setSenha(senha);
 
-        System.out.println("---------------------------");
-        try{
-            Thread.sleep(1500);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        //Adiciona o usuario à lista
-        try{
-            usuariosList.add(usuario);
-        } catch (RuntimeException e) {
-            System.out.println("\u001B[31mNão foi possível cadastrar o usuário. Tente novamente mais tarde!\u001B[0m");
+            if (escolhaCadastro.equals("N")) {
+                terminar = true;
+            }
         }
 
     }
@@ -82,14 +105,15 @@ public class UserService {
 
             System.out.println("-----------Menu-----------");
             System.out.println("[1] Cadastro");
-            System.out.println("[2] Finalizar programa");
+            System.out.println("[2] Visualizar usuários");
+            System.out.println("[3] Finalizar programa");
             System.out.println("--------------------------");
             System.out.print("DIGITE A OPÇÃO DESEJADA: ");
             int opcao = 0;
             String entrada  = sc.nextLine();
+
             while(true){
                 try{
-
                     opcao = Integer.parseInt(entrada);
 
                     if(opcao == 1 || opcao == 2 || opcao == 3){
@@ -103,8 +127,8 @@ public class UserService {
                 } catch ( NumberFormatException e){
                     letraPorLetra("\u001B[31m[ERRO] Isso não é um número! tente novamente\u001B[0m \n");
 
-                    letraPorLetra("[VOLTANDO PARA O MENU] \n");
-                    Thread.sleep(1500);
+                    letraPorLetra("\u001B[33m[VOLTANDO PARA O MENU]\u001B[0m \n");
+                    cronometro(500);
                     break;
                 }
             }
@@ -117,7 +141,7 @@ public class UserService {
                     break;
                 case 3:
                     ficar = false;
-                    System.out.println("Finalizando programa...");
+                    System.out.println("\u001B[36mFinalizando programa...\u001B[0m");
                     break;
             }
 
@@ -128,11 +152,18 @@ public class UserService {
         for (char caractere : mensagem.toCharArray()) {
             System.out.print(caractere);
             try{
-                Thread.sleep(20);
+                Thread.sleep(10);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
         }
 
+    }
+    public static void cronometro(long milis){
+        try{
+            Thread.sleep(milis);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
     }
 }
