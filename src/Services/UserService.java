@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class UserService {
     static Scanner sc = new Scanner(System.in);
     //-------------------------------------------------------------
-    static ArrayList<User> usuariosList = new ArrayList<>();
+    private static ArrayList<User> usuariosList = new ArrayList<>();
     //----------------------METHODS---------------------------------------
     public static void visualizar() {
         System.out.println("\u001B[34m--------------------\u001B[0m Usuários \u001B[34m--------------------\u001B[0m");
@@ -102,52 +102,57 @@ public class UserService {
     public static void atualizar(){
         System.out.println("-----------Atualizar usuários-----------");
         visualizar();
-        System.out.print("\u001B[36mDigite o ID do usuário que deseja atualizar:\u001B[0m ");
         boolean sair = false;
         while(!sair){
+            System.out.print("\u001B[36mDigite o ID do usuário que deseja atualizar:\u001B[0m ");
+
             String entrada = sc.nextLine();
-            int id = Integer.parseInt(entrada);
-            for(User i : usuariosList){
-                if(i.getId() != id){
-                    System.out.println("\u001B[31mID não encontrado. Tente novamente!\u001b[0m");
-                }else {
-                    System.out.println("O que deseja atualizar?");
-                    System.out.println("[1] Nome");
-                    System.out.println("[2] Idade");
-                    System.out.println("[3] Senha");
-                    String escolha = sc.nextLine();
-                    int opcao = 0;
-                    while(true){
-                        try{
-                            opcao = Integer.parseInt(escolha);
+            try{
+                int id = Integer.parseInt(entrada);
 
-                            if(opcao == 1 || opcao == 2 || opcao == 3){
-                                break;
-                            } else{
-                                letraPorLetra("\u001B[31m[ERRO] Você digitou uma opção inválida!\u001B[0m \n");
 
-                                letraPorLetra("[VOLTANDO PARA O MENU] \n");
+                boolean encontrou = false;
+
+                for(User i : usuariosList){
+                    if(i.getId() == id){
+                        encontrou = true;
+                        System.out.println("O que deseja atualizar?");
+                        System.out.println("[1] Nome");
+                        System.out.println("[2] Idade");
+                        System.out.println("[3] Senha");
+                        String escolha = sc.nextLine();
+
+                        int opcao = 0;
+
+                        while(true){
+                            try{
+                                opcao = Integer.parseInt(escolha);
+
+                                if(opcao == 1 || opcao == 2 || opcao == 3){
+                                    break;
+                                } else{
+                                    letraPorLetra("\u001B[31m[ERRO] Você digitou uma opção inválida!\u001B[0m \n");
+
+                                    letraPorLetra("[VOLTANDO PARA O MENU] \n");
+                                    break;
+                                }
+                            } catch ( NumberFormatException e){
+                                letraPorLetra("\u001B[31m[ERRO] Isso não é um número! tente novamente\u001B[0m \n");
+
+                                letraPorLetra("\u001B[33m[VOLTANDO PARA O MENU]\u001B[0m \n");
+                                cronometro(500);
                                 break;
                             }
-                        } catch ( NumberFormatException e){
-                            letraPorLetra("\u001B[31m[ERRO] Isso não é um número! tente novamente\u001B[0m \n");
-
-                            letraPorLetra("\u001B[33m[VOLTANDO PARA O MENU]\u001B[0m \n");
-                            cronometro(500);
-                            break;
                         }
-                    }
-                    switch (opcao){
-                        case 1:
-                            letraPorLetra("Digite o novo nome do usuário: ");
-                            if(i.getId() == id ){
+
+                        switch (opcao){
+                            case 1:
+                                letraPorLetra("Digite o novo nome do usuário: ");
                                 String novoNome = sc.nextLine();
                                 i.setUsuario(novoNome);
                                 sair = true;
-                            }
-                            break;
-                        case 2:
-                            if(i.getId() == id){
+                                break;
+                            case 2:
                                 boolean idadeValida = false;
                                 int novaIdade = 0;
                                 do{
@@ -167,23 +172,32 @@ public class UserService {
                                 }while(!idadeValida);
                                 i.setIdade(novaIdade);
                                 sair = true;
-                            }
-                            break;
-                        case 3:
-                            String novaSenha;
-                            do{
-                                letraPorLetra("Digite a nova senha [6 digitos]: ");
-                                novaSenha = sc.nextLine();
-                                if(novaSenha.length() < 6){
-                                    letraPorLetra("\u001B[31m[ERRO]Sua senha deve conter ao menos 6 digitos, tente novamente.\u001B[0m \n");
-                                }
-                            }while(novaSenha.length() < 6);
-                            i.setSenha(novaSenha);
-                            sair = true;
-                            break;
+
+                                break;
+                            case 3:
+                                String novaSenha;
+                                do{
+                                    letraPorLetra("Digite a nova senha [6 digitos]: ");
+                                    novaSenha = sc.nextLine();
+                                    if(novaSenha.length() < 6){
+                                        letraPorLetra("\u001B[31m[ERRO]Sua senha deve conter ao menos 6 digitos, tente novamente.\u001B[0m \n");
+                                    }
+                                }while(novaSenha.length() < 6);
+                                i.setSenha(novaSenha);
+                                sair = true;
+                                break;
+                        }
+                        break;
                     }
                 }
-            }
+
+                if(!encontrou){
+                    System.out.println("\u001B[31mID não encontrado. Tente novamente!\u001b[0m");
+
+                }
+            }catch (NumberFormatException e){
+                System.out.println("Digite um ID válido!");
+                }
         }
 
     }
