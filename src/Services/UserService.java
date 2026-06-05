@@ -7,9 +7,68 @@ import java.util.Scanner;
 
 public class UserService {
     static Scanner sc = new Scanner(System.in);
-    //-------------------------------------------------------------
+    //-----------------------Armazenamento-------------------------
     private static ArrayList<User> usuariosList = new ArrayList<>();
-    //----------------------METHODS---------------------------------------
+    //--------------------------METHODS-----------------------------------
+
+    public static void definirNome(User usuario){
+        letraPorLetra("Digite seu nome de usuário [Min 4 dígitos]: ");
+        String nome = sc.nextLine().trim();
+
+        while(nome.isEmpty() || nome.length() < 4){
+            System.out.println("\u001B[31m[ERRO] Nome vazio ou menos de 4 letras. Digite novamente\u001B[0m");
+            nome = sc.nextLine().trim();
+        }
+
+        usuario.setUsuario(nome);
+    }
+    //-------------------------------------------------------------
+
+    public static void definirIdade(User usuario){
+        int idade = 0;
+        boolean idadeValida = false;
+
+        //LOOP QUE VERIFICA IDADE
+        do{
+            letraPorLetra("Digite sua idade: ");
+            String entrada = sc.nextLine();
+            try{
+                idade = Integer.parseInt(entrada);
+                if(idade < 0){
+                    letraPorLetra("\u001B[31m[ERRO] Digite a idade corretamente\u001B[0m \n");
+                } else{
+                    idadeValida = true;
+
+                }
+
+            } catch (NumberFormatException e) {
+                letraPorLetra("\u001B[31m[ERRO] Erro ao definir idade!\u001B[0m \n");
+
+            }
+
+        }while(!idadeValida);
+        usuario.setIdade(idade);
+    }
+    //-------------------------------------------------------------
+
+    public static void definirSenha(User usuario){
+        String senha;
+
+        //LOOP QUE VERIFICA A SENHA
+
+        do{
+            letraPorLetra("Digite sua senha [6 digitos]: ");
+            senha = sc.nextLine();
+            if(senha.length() < 6){
+                letraPorLetra("\u001B[31m[ERRO]Sua senha deve conter ao menos 6 digitos, tente novamente.\u001B[0m \n");
+            }
+        }while(senha.length() < 6);
+        usuario.setSenha(senha);
+
+        System.out.println("---------------------------");
+    }
+    //----------------------CRUD METHODS---------------------------------------
+
     public static void visualizar() {
         System.out.println("\u001B[34m--------------------\u001B[0m Usuários \u001B[34m--------------------\u001B[0m");
         System.out.printf("%-10s %-20s %-10s %-12s%n","ID", "NOME", "IDADE", "SENHA");
@@ -25,57 +84,18 @@ public class UserService {
         }
         System.out.println("\u001B[34m--------------------------------------------------\u001B[0m");
     }
-
     //-------------------------------------------------------------
+
     public static void cadastro(){
 
         boolean terminar = false;
         while(!terminar){
             System.out.println("---------Cadastro---------");
             User usuario = new User();
+            definirNome(usuario);
+            definirIdade(usuario);
+            definirSenha(usuario);
 
-            letraPorLetra("Digite seu nome de usuário: ");
-            usuario.setUsuario(sc.nextLine().trim());
-
-            int idade = 0;
-            boolean idadeValida = false;
-
-            //LOOP QUE VERIFICA IDADE
-            do{
-                letraPorLetra("Digite sua idade: ");
-                String entrada = sc.nextLine();
-                try{
-                    idade = Integer.parseInt(entrada);
-                    if(idade < 0){
-                        letraPorLetra("\u001B[31m[ERRO] Digite a idade corretamente\u001B[0m \n");
-                    } else{
-                        idadeValida = true;
-
-                    }
-
-                } catch (NumberFormatException e) {
-                    letraPorLetra("\u001B[31m[ERRO] Erro ao definir idade!\u001B[0m \n");
-
-                }
-
-            }while(!idadeValida);
-            usuario.setIdade(idade);
-
-            String senha;
-
-            //LOOP QUE VERIFICA A SENHA
-
-            do{
-                letraPorLetra("Digite sua senha [6 digitos]: ");
-                senha = sc.nextLine();
-                if(senha.length() < 6){
-                    letraPorLetra("\u001B[31m[ERRO]Sua senha deve conter ao menos 6 digitos, tente novamente.\u001B[0m \n");
-                }
-            }while(senha.length() < 6);
-            usuario.setSenha(senha);
-
-            System.out.println("---------------------------");
-            cronometro(100);
             //Adiciona o usuario à lista
             try{
                 usuariosList.add(usuario);
@@ -99,6 +119,7 @@ public class UserService {
 
     }
     //-------------------------------------------------------------
+
     public static void atualizar(){
         System.out.println("-----------Atualizar usuários-----------");
         visualizar();
@@ -147,43 +168,17 @@ public class UserService {
 
                         switch (opcao){
                             case 1:
-                                letraPorLetra("Digite o novo nome do usuário: ");
-                                String novoNome = sc.nextLine();
-                                i.setUsuario(novoNome);
+                                definirNome(i);
                                 sair = true;
                                 break;
                             case 2:
-                                boolean idadeValida = false;
-                                int novaIdade = 0;
-                                do{
-                                    letraPorLetra("Digite a nova idade do usuário: ");
-                                    String input = sc.nextLine();
-                                    try{
-                                        novaIdade = Integer.parseInt(input);
-                                        if(novaIdade < 0){
-                                            letraPorLetra("\u001B[31m[ERRO] Digite a idade corretamente\u001B[0m \n");
-                                        } else{
-                                            idadeValida = true;
-                                        }
-                                    } catch (NumberFormatException e) {
-                                        letraPorLetra("\u001B[31m[ERRO] Erro ao definir idade!\u001B[0m \n");
+                                definirIdade(i);
 
-                                    }
-                                }while(!idadeValida);
-                                i.setIdade(novaIdade);
                                 sair = true;
 
                                 break;
                             case 3:
-                                String novaSenha;
-                                do{
-                                    letraPorLetra("Digite a nova senha [6 digitos]: ");
-                                    novaSenha = sc.nextLine();
-                                    if(novaSenha.length() < 6){
-                                        letraPorLetra("\u001B[31m[ERRO]Sua senha deve conter ao menos 6 digitos, tente novamente.\u001B[0m \n");
-                                    }
-                                }while(novaSenha.length() < 6);
-                                i.setSenha(novaSenha);
+                                definirSenha(i);
                                 sair = true;
                                 break;
                         }
@@ -192,8 +187,11 @@ public class UserService {
                 }
 
                 if(!encontrou){
-                    System.out.println("\u001B[31mID não encontrado. Tente novamente!\u001b[0m");
-
+                    System.out.print("\u001B[31mID não encontrado. Deseja sair? [S/N]\u001B[0m ");
+                    String escolha = String.valueOf(sc.nextLine().trim().toUpperCase().charAt(0));
+                    if(escolha.equals("S")){
+                        sair = true;
+                    }
                 }
             }catch (NumberFormatException e){
                 System.out.println("Digite um ID válido!");
@@ -202,6 +200,42 @@ public class UserService {
 
     }
     //-------------------------------------------------------------
+    public static void deletar(){
+        System.out.println("-----------Deletar usuário-----------");
+        visualizar();
+        boolean sair = false;
+        while(!sair){
+            System.out.print("\u001B[36mDigite o ID do usuário que deseja deletar:\u001B[0m ");
+
+            String entrada = sc.nextLine();
+            try{
+                int id = Integer.parseInt(entrada);
+
+                boolean encontrou = false;
+
+                for(User i : usuariosList){
+                    if(i.getId() == id){
+                        encontrou = true;
+                        usuariosList.remove(i);
+                        sair = true;
+                        break;
+                    }
+                }
+
+                if(!encontrou){
+                    System.out.print("\u001B[31mID não encontrado. Deseja sair? [S/N]\u001B[0m ");
+                    String escolha = String.valueOf(sc.nextLine().trim().toUpperCase().charAt(0));
+                    if(escolha.equals("S")){
+                        sair = true;
+                    }
+                }
+            }catch (NumberFormatException e){
+                System.out.println("Digite um ID válido!");
+            }
+        }
+    }
+    //-------------------------------------------------------------
+
     public static void menu() throws InterruptedException {
         boolean ficar = true;
         while(ficar){
@@ -210,7 +244,8 @@ public class UserService {
             System.out.println("[1] Cadastro");
             System.out.println("[2] Visualizar usuários");
             System.out.println("[3] Atualizar usuários");
-            System.out.println("[4] Finalizar programa");
+            System.out.println("[4] Deletar usuário");
+            System.out.println("[5] Finalizar programa");
             System.out.println("--------------------------");
             System.out.print("DIGITE A OPÇÃO DESEJADA: ");
             int opcao = 0;
@@ -220,7 +255,7 @@ public class UserService {
                 try{
                     opcao = Integer.parseInt(entrada);
 
-                    if(opcao == 1 || opcao == 2 || opcao == 3 || opcao == 4){
+                    if(opcao == 1 || opcao == 2 || opcao == 3 || opcao == 4 || opcao == 5){
                         break;
                     } else{
                         letraPorLetra("\u001B[31m[ERRO] Você digitou uma opção inválida!\u001B[0m \n");
@@ -247,6 +282,9 @@ public class UserService {
                     atualizar();
                     break;
                 case 4:
+                    deletar();
+                    break;
+                case 5:
                     ficar = false;
                     System.out.println("\u001B[36mFinalizando programa...\u001B[0m");
                     break;
@@ -254,7 +292,8 @@ public class UserService {
 
         }
     }
-    //-------------------------------------------------------------------
+    //-----------------------------METODOS UTILITARIOS--------------------------------------
+
     public static void letraPorLetra(String mensagem){
         for (char caractere : mensagem.toCharArray()) {
             System.out.print(caractere);
