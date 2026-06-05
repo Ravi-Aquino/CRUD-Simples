@@ -212,14 +212,17 @@ public class UserService {
                 int id = Integer.parseInt(entrada);
 
                 boolean encontrou = false;
-
+                User usuarioEncontrado = null;
                 for(User i : usuariosList){
                     if(i.getId() == id){
                         encontrou = true;
-                        usuariosList.remove(i);
+                        usuarioEncontrado = i;
                         sair = true;
                         break;
                     }
+                }
+                if(usuarioEncontrado != null){
+                    usuariosList.remove(usuarioEncontrado);
                 }
 
                 if(!encontrou){
