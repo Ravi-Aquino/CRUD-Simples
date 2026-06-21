@@ -10,10 +10,7 @@ Projeto desenvolvido para praticar:
 
 ## Funcionalidades
 
-- Cadastro de usuários
-- Listagem de usuários
-
-## Próximas atualizações
-- Persistência em memória (Array list)
-- Exclusão de usuários
-- Busca de usuários
+- Cadastro de usuários (em memória)
+- Leitura de usuários (em memória)
+- Atualização de usuários (em memória)
+- Exclusão de usuários (em memória)
