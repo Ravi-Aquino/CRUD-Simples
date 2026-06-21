@@ -6,6 +6,9 @@ out/
 !**/src/test/**/out/
 .kotlin
 
+# Arquivos de dados da aplicação
+src/Repository/USUARIOS.txt
+
 ### Eclipse ###
 .apt_generated
 .classpath
