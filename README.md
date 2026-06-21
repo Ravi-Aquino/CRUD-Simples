@@ -3,17 +3,17 @@
 Projeto desenvolvido para praticar:
 
 - POO
-- Classes e Objetos
-- Encapsulamento
+- Classes utilitárias
 - Organização em pacotes
 - Git e GitHub
+- persistência de dados 
 
 ## Funcionalidades
 
-- Cadastro de usuários
-- Listagem de usuários
+- Cadastro de usuários  (em arquivo .txt)
+
 
 ## Próximas atualizações
-- Persistência em memória (Array list)
+- Leitura de usuários
 - Exclusão de usuários
-- Busca de usuários
+- Atualização de usuários
