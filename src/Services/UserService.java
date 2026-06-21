@@ -2,16 +2,20 @@ package Services;
 
 import Entities.User;
 //
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class UserService {
     static Scanner sc = new Scanner(System.in);
     //-----------------------Armazenamento-------------------------
     private static ArrayList<User> usuariosList = new ArrayList<>();
+    static File file = new File("F:\\coisas Ravi\\projetos\\CRUD-Simples\\src\\Repository\\USUARIOS.txt");
+
     //--------------------------METHODS-----------------------------------
 
-    public static void definirNome(User usuario){
+    public static String definirNome(User usuario){
         letraPorLetra("Digite seu nome de usuário [Min 4 dígitos]: ");
         String nome = sc.nextLine().trim();
 
@@ -21,10 +25,11 @@ public class UserService {
         }
 
         usuario.setUsuario(nome);
+        return usuario.getUsuario();
     }
     //-------------------------------------------------------------
 
-    public static void definirIdade(User usuario){
+    public static int definirIdade(User usuario){
         int idade = 0;
         boolean idadeValida = false;
 
@@ -48,10 +53,12 @@ public class UserService {
 
         }while(!idadeValida);
         usuario.setIdade(idade);
+        return usuario.getIdade();
+
     }
     //-------------------------------------------------------------
 
-    public static void definirSenha(User usuario){
+    public static String definirSenha(User usuario){
         String senha;
 
         //LOOP QUE VERIFICA A SENHA
@@ -64,8 +71,9 @@ public class UserService {
             }
         }while(senha.length() < 6);
         usuario.setSenha(senha);
-
         System.out.println("---------------------------");
+        return usuario.getSenha();
+
     }
     //----------------------CRUD METHODS---------------------------------------
 
@@ -87,18 +95,30 @@ public class UserService {
     //-------------------------------------------------------------
 
     public static void cadastro(){
-
         boolean terminar = false;
         while(!terminar){
             System.out.println("---------Cadastro---------");
             User usuario = new User();
-            definirNome(usuario);
-            definirIdade(usuario);
-            definirSenha(usuario);
 
+            String[] userDataArray = {
+                    String.valueOf(usuario.getId()),
+                    definirNome(usuario),
+                    String.valueOf(definirIdade(usuario)),
+                    definirSenha(usuario)
+            };
             //Adiciona o usuario à lista
-            try{
-                usuariosList.add(usuario);
+
+            try{//cria filewrite e buffered writer
+                try(FileWriter fw = new FileWriter(file,true); BufferedWriter bw = new BufferedWriter(fw)) {
+                    String linha = String.join(";", userDataArray); //transforma o array em String
+                    bw.write(linha);
+                    bw.newLine();
+                    bw.flush();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             } catch (RuntimeException e) {
                 System.out.println("\u001B[31mNão foi possível cadastrar o usuário. Tente novamente mais tarde!\u001B[0m");
             }

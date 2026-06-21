@@ -1,15 +1,49 @@
 package Entities;
 
+import java.io.*;
+
 public class User {
     private int id;
     private String usuario;
     private int idade;
     private String senha;
-    private static int proximoId = 1;
 //--------------------------------------------------------------
+    static File file = new File("F:\\coisas Ravi\\projetos\\CRUD-Simples\\src\\Repository\\USUARIOS.txt");
+    {
+        if(!file.exists()){
+
+            FileWriter fw = null;
+            try {
+                fw = new FileWriter(file,true);
+                fw.write("");
+                System.out.println("Arquivo criado com sucesso");
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Falha ao encontrar ou criar arquivo");
+            }
+         }
+    }
     public User() {
-        this.id = proximoId;
-        proximoId++;
+        if(file.length() == 0){
+            this.id = 1;
+        }else{
+            String lastLine = null;
+            try(FileReader fr = new FileReader(file); BufferedReader br = new BufferedReader(fr)){
+                String line;
+                while((line = br.readLine()) != null){
+                    lastLine = line;
+                }
+                if(lastLine != null && !lastLine.isBlank()){
+                    String[] parts = lastLine.split(";");
+                    this.id = Integer.parseInt(parts[0].trim()) + 1;
+                }else{
+                    this.id = 1;
+                }
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+        }
+
     }
     //--------------------------------------------------------------
 
