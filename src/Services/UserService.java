@@ -82,13 +82,21 @@ public class UserService {
         System.out.printf("%-10s %-20s %-10s %-12s%n","ID", "NOME", "IDADE", "SENHA");
         System.out.println("--------------------------------------------------");
 
-        for (User user : usuariosList) {
-            System.out.printf("%-10s %-20s %-10s %-12s%n",
-                    user.getId(),
-                    user.getUsuario(),
-                    user.getIdade(),
-                    user.getSenha()
-            );
+        try(FileReader fr = new FileReader(file); BufferedReader br = new BufferedReader(fr)) {
+            String line;
+            //printa cada parte do nome
+            while((line = br.readLine()) != null){
+                String[] parts = line.split(";");
+                System.out.printf("%-10s %-20s %-10s %-12s%n",
+                        parts[0],
+                        parts[1],
+                        parts[2],
+                        parts[3]
+                );
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         System.out.println("\u001B[34m--------------------------------------------------\u001B[0m");
     }
