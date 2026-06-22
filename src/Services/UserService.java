@@ -3,15 +3,33 @@ package Services;
 import Entities.User;
 //
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserService {
     static Scanner sc = new Scanner(System.in);
     //-----------------------Armazenamento-------------------------
     private static ArrayList<User> usuariosList = new ArrayList<>();
     static File file = new File("F:\\coisas Ravi\\projetos\\CRUD-Simples\\src\\Repository\\USUARIOS.txt");
+    /*Objetivo: Criar duas funções - Carregar Usuários e Salvar Usuários.
+        Carregar Usuários: Pega dados do arquivo .txt. Se não houver dados, serão criados os primeiros e salvo no usuariosList
+        Salvar Usuários: Pega os dados de usuariosList e salva em arquivo .txt
+
+     */
+    public static void salvarUsuario(){
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file,true))){
+
+            for(User u : usuariosList){
+                bw.write(u.toString());
+                bw.flush();
+                bw.newLine();
+            }
+
+            System.out.println("Usuários salvos com sucesso");
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
     //--------------------------METHODS-----------------------------------
 
@@ -76,27 +94,19 @@ public class UserService {
 
     }
     //----------------------CRUD METHODS---------------------------------------
-
+//falta adicionar o carregarUsuarios
     public static void visualizar() {
         System.out.println("\u001B[34m--------------------\u001B[0m Usuários \u001B[34m--------------------\u001B[0m");
         System.out.printf("%-10s %-20s %-10s %-12s%n","ID", "NOME", "IDADE", "SENHA");
         System.out.println("--------------------------------------------------");
 
-        try(FileReader fr = new FileReader(file); BufferedReader br = new BufferedReader(fr)) {
-            String line;
-            //printa cada parte do nome
-            while((line = br.readLine()) != null){
-                String[] parts = line.split(";");
-                System.out.printf("%-10s %-20s %-10s %-12s%n",
-                        parts[0],
-                        parts[1],
-                        parts[2],
-                        parts[3]
-                );
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (User user : usuariosList) {
+            System.out.printf("%-10s %-20s %-10s %-12s%n",
+                    user.getId(),
+                    user.getUsuario(),
+                    user.getIdade(),
+                    user.getSenha()
+            );
         }
         System.out.println("\u001B[34m--------------------------------------------------\u001B[0m");
     }
@@ -116,17 +126,10 @@ public class UserService {
             };
             //Adiciona o usuario à lista
 
-            try{//cria filewrite e buffered writer
-                try(FileWriter fw = new FileWriter(file,true); BufferedWriter bw = new BufferedWriter(fw)) {
-                    String linha = String.join(";", userDataArray); //transforma o array em String
-                    bw.write(linha);
-                    bw.newLine();
-                    bw.flush();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+            try{
+                usuariosList.add(usuario);
+                System.out.println(usuariosList);
+                salvarUsuario();
             } catch (RuntimeException e) {
                 System.out.println("\u001B[31mNão foi possível cadastrar o usuário. Tente novamente mais tarde!\u001B[0m");
             }
@@ -147,7 +150,7 @@ public class UserService {
 
     }
     //-------------------------------------------------------------
-
+    //falta adicionar o salvarUsuarios e o carregar
     public static void atualizar(){
         System.out.println("-----------Atualizar usuários-----------");
         visualizar();
@@ -223,11 +226,12 @@ public class UserService {
                 }
             }catch (NumberFormatException e){
                 System.out.println("Digite um ID válido!");
-                }
+            }
         }
 
     }
     //-------------------------------------------------------------
+    //falta adicionar o salvarUsuarios e carregar
     public static void deletar(){
         System.out.println("-----------Deletar usuário-----------");
         visualizar();
