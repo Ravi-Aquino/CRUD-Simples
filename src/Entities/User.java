@@ -28,7 +28,7 @@ public class User {
             this.id = 1;
         }else{
             String lastLine = null;
-            try(FileReader fr = new FileReader(file); BufferedReader br = new BufferedReader(fr)){
+            try(BufferedReader br = new BufferedReader(new FileReader(file))){
                 String line;
                 while((line = br.readLine()) != null){
                     lastLine = line;
@@ -87,11 +87,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", usuario='" + usuario + '\'' +
-                ", idade=" + idade +
-                ", senha='" + senha + '\'' +
-                '}';
+        return this.id+";"+this.usuario+";"+this.idade+";"+this.senha;
     }
 }

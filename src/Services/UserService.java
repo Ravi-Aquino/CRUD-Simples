@@ -10,25 +10,48 @@ public class UserService {
     static Scanner sc = new Scanner(System.in);
     //-----------------------Armazenamento-------------------------
     private static ArrayList<User> usuariosList = new ArrayList<>();
+
     static File file = new File("F:\\coisas Ravi\\projetos\\CRUD-Simples\\src\\Repository\\USUARIOS.txt");
     /*Objetivo: Criar duas funções - Carregar Usuários e Salvar Usuários.
         Carregar Usuários: Pega dados do arquivo .txt. Se não houver dados, serão criados os primeiros e salvo no usuariosList
         Salvar Usuários: Pega os dados de usuariosList e salva em arquivo .txt
 
      */
-    public static void salvarUsuario(){
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file,true))){
+    public static void carregarUsuarios(){
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            usuariosList.clear();
+            String line;
+            while((line = br.readLine()) != null){
+                String[] parts = line.split(";");
+                User usuario = new User();
+                usuario.setId(Integer.parseInt(parts[0]));
+                usuario.setUsuario(parts[1]);
+                usuario.setIdade(Integer.parseInt(parts[2]));
+                usuario.setSenha(parts[3]);
+                //adiciona a lista de usuários
 
-            for(User u : usuariosList){
-                bw.write(u.toString());
-                bw.flush();
-                bw.newLine();
+                usuariosList.add(usuario);
+                //com a lista de usuários sendo preenchida, é possível realizar as outras ações do CRUD
             }
-
-            System.out.println("Usuários salvos com sucesso");
         }catch (IOException e){
             e.printStackTrace();
         }
+    }
+
+
+    public static void salvarTodosUsuarios(){
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))){
+            for(User u : usuariosList){
+
+                bw.write(u.toString());
+                bw.flush();
+                bw.newLine();
+
+                System.out.println("Usuários salvos com sucesso");
+            }
+            }catch (IOException e){
+                e.printStackTrace();
+            }
     }
 
     //--------------------------METHODS-----------------------------------
@@ -83,7 +106,7 @@ public class UserService {
 
         do{
             letraPorLetra("Digite sua senha [6 digitos]: ");
-            senha = sc.nextLine();
+            senha = sc.nextLine().trim();
             if(senha.length() < 6){
                 letraPorLetra("\u001B[31m[ERRO]Sua senha deve conter ao menos 6 digitos, tente novamente.\u001B[0m \n");
             }
@@ -118,18 +141,17 @@ public class UserService {
             System.out.println("---------Cadastro---------");
             User usuario = new User();
 
-            String[] userDataArray = {
-                    String.valueOf(usuario.getId()),
-                    definirNome(usuario),
-                    String.valueOf(definirIdade(usuario)),
-                    definirSenha(usuario)
-            };
             //Adiciona o usuario à lista
 
             try{
+                definirNome(usuario);
+                definirIdade(usuario);
+                definirSenha(usuario);
+
                 usuariosList.add(usuario);
                 System.out.println(usuariosList);
-                salvarUsuario();
+                salvarTodosUsuarios();
+
             } catch (RuntimeException e) {
                 System.out.println("\u001B[31mNão foi possível cadastrar o usuário. Tente novamente mais tarde!\u001B[0m");
             }
@@ -150,7 +172,7 @@ public class UserService {
 
     }
     //-------------------------------------------------------------
-    //falta adicionar o salvarUsuarios e o carregar
+
     public static void atualizar(){
         System.out.println("-----------Atualizar usuários-----------");
         visualizar();
@@ -213,6 +235,7 @@ public class UserService {
                                 sair = true;
                                 break;
                         }
+                        salvarTodosUsuarios();
                         break;
                     }
                 }
@@ -255,6 +278,7 @@ public class UserService {
                 }
                 if(usuarioEncontrado != null){
                     usuariosList.remove(usuarioEncontrado);
+                    salvarTodosUsuarios();
                 }
 
                 if(!encontrou){
@@ -272,6 +296,7 @@ public class UserService {
     //-------------------------------------------------------------
 
     public static void menu() throws InterruptedException {
+        carregarUsuarios();
         boolean ficar = true;
         while(ficar){
 
