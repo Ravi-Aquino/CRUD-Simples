@@ -10,10 +10,13 @@ Projeto desenvolvido para praticar:
 
 ## Funcionalidades
 
-- Cadastro de usuários  (em arquivo .txt)
+- Cadastrar usuários  
+- Visualizar Usuários 
+- Exluir usuários 
+- Atualizar os usuários
 
+## informação relevante
+- Todos os dados são armazenados em arquivo .txt
 
 ## Próximas atualizações
-- Leitura de usuários
-- Exclusão de usuários
-- Atualização de usuários
+- persistência em banco de dados
